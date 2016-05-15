@@ -25,8 +25,8 @@ reload(load_data)
 reload(plots)
 
 # Directories where files are stored or loaded from
-CAUSTICS_FRAMES_DIR = "causticframes"
-WHITENED_FRAMES_DIR = "whitenedframes"
+CAUSTICS_FRAMES_DIR = "caustic_frames"
+WHITENED_FRAMES_DIR = "whitened_frames"
 FILTERS_DIR = "filters"
 PARAMS_DIR = "params"
 os.makedirs(CAUSTICS_FRAMES_DIR, exist_ok=True)
