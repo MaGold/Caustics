@@ -40,10 +40,10 @@ theano.config.floatX = 'float32'
 srng = RandomStreams()
 
 channels = 3
-real, shp = load_data.get_real_data(img_shape=IMG_SHAPE)
+real = load_data.get_real_data(img_shape=IMG_SHAPE)
 
-img_x = shp[0]
-img_y = img_x
+img_x = IMG_SHAPE[0]
+img_y = IMG_SHAPE[1]
 
 teReal = real.reshape((real.shape[0], img_x, img_y, channels))
 teReal = np.swapaxes(teReal, 2, 3)
@@ -53,11 +53,11 @@ X = T.ftensor4()
 Y = T.ftensor4()
 
 # Load the parameters of the previously trained network
-filters_file = os.path.join(PARAMS_DIR, "1_filter_params.p")
-biases_file = os.path.join(PARAMS_DIR, "1_bias_params.p")
+filters_file = os.path.join(PARAMS_DIR, "11_filter_params.p")
+biases_file = os.path.join(PARAMS_DIR, "11_bias_params.p")
 filter_params = pickle.load(open(filters_file, "rb"))
 bias_params = pickle.load(open(biases_file, "rb"))
-print("Netowkr parameters loaded.")
+print("Network parameters loaded.")
 
 pred_out = model.model(X, filter_params, bias_params, 0.0, srng)
 pred_out_flat = pred_out.flatten(2)

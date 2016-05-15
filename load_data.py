@@ -5,11 +5,11 @@ import numpy as np
 
 # Walk through path and get filenames as strings
 def get_filenames(path):
-    fnames = []
-    for (dirpath, dirnames, filenames) in os.walk(path):
-        fnames.extend(filenames)
+    f_names = []
+    for (dir_path, dir_names, file_names) in os.walk(path):
+        f_names.extend(file_names)
         break
-    return fnames
+    return f_names
 
 
 # Extracts submatrices of M having shape `shape`
@@ -114,6 +114,7 @@ def get_data(img_shape=(100, 100)):
     X = X.astype(np.float32)
     Y = Y.astype(np.float32)
 
+    # Shuffle the data and set aside 200 synthetic validation images
     a = np.arange(X.shape[0])
     np.random.shuffle(a)
     indx = a[:200]
@@ -144,13 +145,10 @@ def get_data(img_shape=(100, 100)):
     teY = np.swapaxes(teY, 2, 3)
     teY = np.swapaxes(teY, 1, 2)
 
-    teReal = real_imgs.reshape((real_imgs.shape[0],
-                                img_x,
-                                img_y,
-                                channels))
+    teReal = real_imgs.reshape((real_imgs.shape[0], img_x, img_y, channels))
     teReal = np.swapaxes(teReal, 2, 3)
     teReal = np.swapaxes(teReal, 1, 2)
-    return trX, trY, teX, teY, teReal, img_shape
+    return trX, trY, teX, teY, teReal
 
 
 def get_real_data(img_shape=(100, 100)):
@@ -167,4 +165,4 @@ def get_real_data(img_shape=(100, 100)):
     real_imgs = np.array(real_imgs)
     real_imgs = real_imgs*1.0/np.max(real_imgs)
     real_imgs = real_imgs.astype(np.float32)
-    return real_imgs, img_shape
+    return real_imgs

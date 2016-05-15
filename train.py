@@ -40,7 +40,7 @@ os.makedirs(TRAIN_DIR, exist_ok=True)
 os.makedirs(VAL_DIR, exist_ok=True)
 
 # Number of pixels in the input and output images
-IMG_SHAPE = (100, 100)
+IMG_SHAPE = (200, 200)
 
 theano.config.floatX = 'float32'
 srng = RandomStreams()
@@ -52,9 +52,9 @@ print("Loading image data...")
 write("Loading image data...")
 
 channels = 3
-trX, trY, teX, teY, teReal, shp = load_data.get_data(img_shape=IMG_SHAPE)
-img_x = shp[0]
-img_y = img_x
+trX, trY, teX, teY, teReal = load_data.get_data(img_shape=IMG_SHAPE)
+img_x = IMG_SHAPE[0]
+img_y = IMG_SHAPE[1]
 
 s1 = str(trX.shape[0]) + " synthetic training images.\n"
 s2 = str(teX.shape[0]) + " synthetic validation images.\n"
@@ -109,11 +109,13 @@ updates = model.RMSprop(noise_cost, params, lr=0.001)
 
 train = theano.function(inputs=[X, Y],
                         outputs=noise_cost,
-                        updates=updates, allow_input_downcast=True)
+                        updates=updates,
+                        allow_input_downcast=True)
 
 predict = theano.function(inputs=[X],
                           outputs=pred_out,
                           allow_input_downcast=True)
+
 error = theano.function(inputs=[X, Y],
                         outputs=clean_cost,
                         allow_input_downcast=True)
@@ -190,7 +192,9 @@ for i in range(NUM_EPOCHS):
                           range(BATCH_SIZE, len(trX), BATCH_SIZE)):
         r = rindx[start:end]
         batch_cost = train(trX[r, :], trY[r, :])
-        write(str(i) + ": " + str(start) + ": " + str(batch_cost) + "\n")
+        write("Epoch: " + str(i) +
+              ", index: " + str(start) +
+              ", cost: " + str(batch_cost) + "\n")
 
     diff = time.time() - start_time
     minutes = diff / 60.0
