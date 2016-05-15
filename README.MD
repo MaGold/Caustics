@@ -11,11 +11,14 @@ By default, data will be read from the `data` directory. The specific structure 
 ## Training
 
 Training is done using the script `train.py`. The network archicture
-is specified in this file. Three directories will created by this script for storing images and network parameters as the network progresses. By default, these directories are `training_images`, `validation_images`, and `params`. Training costs and other details will be written to `costs.txt`.
+is specified in this file. Three directories will created by this script for storing images and network parameters as training progresses. By default, these directories are `training_images`, `validation_images`, and `params`. Training costs and other details will be written to `costs.txt`.
 
 ## Processing
 
-Once training is complete and network parameters have been saved in the `params` directory, the script in `process.py` can be used to inspect the trained network. Three directories will created by this script for storing images. By default, these directories are `caustic_frames`, `whitened_images`, and `filters`.
+Once training is complete and network parameters have been saved in the `params` directory, the script in `process.py` can be used to inspect the trained network. Three directories will created by this script for storing images. By default, these directories are `caustic_frames`, `whitened_images`, and `filters`. The frames of a video are processed by the network;
+- the output greyscale frames are saved to `caustic_frames`
+- the thresholded rgb frames with white pixels at thresholded locations are saved to `whitened_frames`
+- the first layers filters are saved to `filters`
 
 
 

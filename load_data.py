@@ -168,34 +168,3 @@ def get_real_data(img_shape=(100, 100)):
     real_imgs = real_imgs*1.0/np.max(real_imgs)
     real_imgs = real_imgs.astype(np.float32)
     return real_imgs, img_shape
-
-
-# def get_synthetic_data():
-#     synthetic_path = os.path.join("data",
-#                                   "realfromabove")
-#     synthetic_path = os.path.join("data",
-#                                   "datasetv2",
-#                                   "Underwater_Caustics",
-#                                   "set2")
-
-#     real_img_names = sorted(get_filenames(synthetic_path))
-
-#     # Load each img, resizing, reshaping, etc...
-#     real_imgs, real_imgshape = load_imgs(real_img_names,
-#                                          synthetic_path,
-#                                          real=False)
-
-#     # Convert the list of images to a numpy array
-#     real_imgs = np.array(real_imgs)
-#     real_imgs = real_imgs*1.0/np.max(real_imgs)
-#     real_imgs = real_imgs.astype(np.float32)
-
-#     test_path = os.path.join("data", "testimgs")
-#     test_img_names = sorted(get_filenames(test_path))
-#     testimgs = load_imgs(test_img_names,
-#                          test_path,
-#                          real=True)
-#     testimgs = np.array(testimgs)
-#     testimgs = testimgs*1.0/np.max(testimgs)
-#     testimgs = testimgs.astype(np.float32)
-#     return real_imgs, real_imgshape, testimgs
