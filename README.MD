@@ -6,7 +6,7 @@ Requirements:
 - matplotlib
 
 There are two main files to work with directly: `train.py` and `process.py`.
-By default, data will be read from the `data` directory. The specific structure of this directory is specified in `load_data.py`. The general model setup is contained in `model.py`, and finally `plots.py` contains simple functions for plotting training curve, image reconstructions, and more.
+By default, data will be read from the `data` directory. The specific structure of this directory is specified in `load_data.py`. The general model setup is contained in `model.py`. The file `plots.py` contains simple functions for plotting training curve, image reconstructions, and more.
 
 ## Training
 
