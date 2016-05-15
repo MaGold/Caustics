@@ -80,7 +80,7 @@ filters = [f1]
 filter_params, bias_params = model.get_params(img_x, filters)
 
 # Model with dropout for training
-noise_out = model.model(X, filter_params, bias_params, 0.3, srng)
+noise_out = model.model(X, filter_params, bias_params, 0.5, srng)
 noise_out_flat = noise_out.flatten(2)
 
 # Model without dropout for validating
@@ -110,6 +110,7 @@ updates = model.RMSprop(noise_cost, params, lr=0.001)
 train = theano.function(inputs=[X, Y],
                         outputs=noise_cost,
                         updates=updates, allow_input_downcast=True)
+
 predict = theano.function(inputs=[X],
                           outputs=pred_out,
                           allow_input_downcast=True)
@@ -117,8 +118,10 @@ error = theano.function(inputs=[X, Y],
                         outputs=clean_cost,
                         allow_input_downcast=True)
 
-# ------------------------------------------------------------
+# ------------------------------------------------
 # Training loop begins
+# ------------------------------------------------
+
 NUM_EPOCHS = 2000
 BATCH_SIZE = 1
 
