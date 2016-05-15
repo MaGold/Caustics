@@ -1,8 +1,8 @@
 # Caustics
 
 Requirements:
-python3
-theano
+- python 3
+- theano
 
 There are two main files to work with directly: `train.py` and `process.py`.
 
