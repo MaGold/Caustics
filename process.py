@@ -53,11 +53,11 @@ X = T.ftensor4()
 Y = T.ftensor4()
 
 # Load the parameters of the previously trained network
-filters_file = os.path.join(PARAMS_DIR, "48_filter_params.p")
-biases_file = os.path.join(PARAMS_DIR, "48_bias_params.p")
+filters_file = os.path.join(PARAMS_DIR, "1_filter_params.p")
+biases_file = os.path.join(PARAMS_DIR, "1_bias_params.p")
 filter_params = pickle.load(open(filters_file, "rb"))
 bias_params = pickle.load(open(biases_file, "rb"))
-print("Parameters loaded.")
+print("Netowkr parameters loaded.")
 
 pred_out = model.model(X, filter_params, bias_params, 0.0, srng)
 pred_out_flat = pred_out.flatten(2)

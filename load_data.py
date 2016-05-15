@@ -31,35 +31,33 @@ def matrix_splitter(M, shape):
 # Load images in given directory
 def load_imgs(fnames, dir_name, img_shape,
               num_imgs=99999, grey=False, real=False):
-    pics = []
-    imgshape = []
+    imgs = []
     count = 0
     for img in fnames:
         if count > num_imgs:
             break
         count += 1
         fullpath = os.path.join(dir_name, img)
-        pic = scipy.misc.imread(fullpath)
-        if grey and len(pic.shape) == 2:
-            pic = pic.reshape(pic.shape[0], pic.shape[1], 1)
+        img = scipy.misc.imread(fullpath)
+        if grey and len(img.shape) == 2:
+            img = img.reshape(img.shape[0], img.shape[1], 1)
         if real:
-            subpics = matrix_splitter(pic, shape=(480, 480))
+            sub_imgs = matrix_splitter(img, shape=(480, 480))
         else:
-            subpics = matrix_splitter(pic, shape=(pic.shape[0],
-                                                  pic.shape[0]))
-        for pic in subpics:
-            if grey and pic.shape[2] == 3:
-                pic = 0.21*pic[:, :, 0] + 0.72*pic[:, :, 1] + 0.07*pic[:, :, 2]
-            elif grey and pic.shape[2] == 1:
-                pic = pic.reshape(pic.shape[0], pic.shape[1])
-            if pic.shape[0] > img_shape[0] and pic.shape[1] > img_shape[1]:
-                pic = scipy.misc.imresize(pic, img_shape)
-                imgshape = pic.shape
-                pics.append(pic.reshape(-1))
-    return pics, imgshape
+            sub_imgs = matrix_splitter(img, shape=(img.shape[0],
+                                                   img.shape[0]))
+        for img in sub_imgs:
+            if grey and img.shape[2] == 3:
+                img = 0.21*img[:, :, 0] + 0.72*img[:, :, 1] + 0.07*img[:, :, 2]
+            elif grey and img.shape[2] == 1:
+                img = img.reshape(img.shape[0], img.shape[1])
+            if img.shape[0] > img_shape[0] and img.shape[1] > img_shape[1]:
+                img = scipy.misc.imresize(img, img_shape)
+                imgs.append(img.reshape(-1))
+    return imgs
 
 
-def get_data(img_shape=(100,100)):
+def get_data(img_shape=(100, 100)):
     rgb_path1 = os.path.join("data",
                              "datasetv2",
                              "Underwater_Caustics",
@@ -79,47 +77,38 @@ def get_data(img_shape=(100,100)):
     real_path = os.path.join("data",
                              "real")
 
-    rgb_imgnames1 = sorted(get_filenames(rgb_path1))
-    rgb_imgnames2 = sorted(get_filenames(rgb_path2))
-    mask_imgnames1 = sorted(get_filenames(mask_path1))
-    mask_imgnames2 = sorted(get_filenames(mask_path2))
-    real_imgnames = sorted(get_filenames(real_path))
+    rgb_img_names1 = sorted(get_filenames(rgb_path1))
+    rgb_img_names2 = sorted(get_filenames(rgb_path2))
+    mask_img_names1 = sorted(get_filenames(mask_path1))
+    mask_img_names2 = sorted(get_filenames(mask_path2))
+    real_img_names = sorted(get_filenames(real_path))
 
-    # Load each pic, resizing, reshaping, etc...
-    rgb_pics1, rgb_imgshape = load_imgs(rgb_imgnames1,
-                                        rgb_path1,
-                                        img_shape=img_shape)
-    rgb_pics2, rgb_imgshape = load_imgs(rgb_imgnames2,
-                                        rgb_path2,
-                                        img_shape=img_shape)
-    mask_pics1, mask_imgshape = load_imgs(mask_imgnames1,
-                                          mask_path1,
-                                          img_shape=img_shape,
-                                          grey=True)
-    mask_pics2, mask_imgshape = load_imgs(mask_imgnames2,
-                                          mask_path2,
-                                          img_shape=img_shape,
-                                          grey=True)
-    real_pics, real_imgshape = load_imgs(real_imgnames,
-                                         real_path,
-                                         img_shape=img_shape,
-                                         real=True)
-
-    rgb_pics = np.concatenate((rgb_pics1, rgb_pics2), axis=0)
-    mask_pics = np.concatenate((mask_pics1, mask_pics2), axis=0)
+    # Load each img, resizing, reshaping, etc...
+    rgb_imgs1 = load_imgs(rgb_img_names1, rgb_path1, img_shape=img_shape)
+    rgb_imgs2 = load_imgs(rgb_img_names2, rgb_path2, img_shape=img_shape)
+    mask_imgs1 = load_imgs(mask_img_names1, mask_path1, img_shape=img_shape,
+                           grey=True)
+    mask_imgs2 = load_imgs(mask_img_names2, mask_path2, img_shape=img_shape,
+                           grey=True)
+    real_imgs = load_imgs(real_img_names, real_path, img_shape=img_shape,
+                          real=True)
+    rgb_imgs = np.concatenate((rgb_imgs1, rgb_imgs2), axis=0)
+    mask_imgs = np.concatenate((mask_imgs1, mask_imgs2), axis=0)
 
     # Convert the list of images to a numpy array
-    X = np.array(rgb_pics)
-    Y = np.array(mask_pics)
-    # Delete pics to free up memory
-    del rgb_pics
-    del mask_pics
+    X = np.array(rgb_imgs)
+    Y = np.array(mask_imgs)
+
+    # Delete imgs to free up memory
+    del rgb_imgs
+    del mask_imgs
+
     # Rescale
     X = X*1.0/np.max(X)
     Y = Y*1.0/np.max(Y)
-    real_pics = np.array(real_pics)
-    real_pics = real_pics*1.0/np.max(real_pics)
-    real_pics = real_pics.astype(np.float32)
+    real_imgs = np.array(real_imgs)
+    real_imgs = real_imgs*1.0/np.max(real_imgs)
+    real_imgs = real_imgs.astype(np.float32)
 
     # To keep theano from complaining
     X = X.astype(np.float32)
@@ -133,10 +122,10 @@ def get_data(img_shape=(100,100)):
     trX = np.delete(X, indx, 0)
     trY = np.delete(Y, indx, 0)
 
-    teReal = real_pics
+    teReal = real_imgs
     channels = 3
-    img_x = rgb_imgshape[0]
-    img_y = rgb_imgshape[1]
+    img_x = img_shape[0]
+    img_y = img_shape[1]
 
     # Reshape data into the format theano wants it for convolutions
     trX = trX.reshape((trX.shape[0], img_x, img_y, channels))
@@ -155,58 +144,58 @@ def get_data(img_shape=(100,100)):
     teY = np.swapaxes(teY, 2, 3)
     teY = np.swapaxes(teY, 1, 2)
 
-    teReal = real_pics.reshape((real_pics.shape[0],
+    teReal = real_imgs.reshape((real_imgs.shape[0],
                                 img_x,
                                 img_y,
                                 channels))
     teReal = np.swapaxes(teReal, 2, 3)
     teReal = np.swapaxes(teReal, 1, 2)
-    return trX, trY, teX, teY, teReal, rgb_imgshape
+    return trX, trY, teX, teY, teReal, img_shape
 
 
 def get_real_data(img_shape=(100, 100)):
     real_path = os.path.join("data", "realfromabove")
-    real_imgnames = sorted(get_filenames(real_path))
-    print("Loading " + str(len(real_imgnames)) + " images...")
-    # Load each pic, resizing, reshaping, etc...
-    real_pics, real_imgshape = load_imgs(real_imgnames,
-                                         real_path,
-                                         img_shape=img_shape,
-                                         real=True)
+    real_img_names = sorted(get_filenames(real_path))
+    print("Loading " + str(len(real_img_names)) + " images...")
+    # Load each img, resizing, reshaping, etc...
+    real_imgs = load_imgs(real_img_names,
+                          real_path,
+                          img_shape=img_shape,
+                          real=True)
     print("Loading done.")
     # Convert the list of images to a numpy array
-    real_pics = np.array(real_pics)
-    real_pics = real_pics*1.0/np.max(real_pics)
-    real_pics = real_pics.astype(np.float32)
-    return real_pics, real_imgshape
+    real_imgs = np.array(real_imgs)
+    real_imgs = real_imgs*1.0/np.max(real_imgs)
+    real_imgs = real_imgs.astype(np.float32)
+    return real_imgs, img_shape
 
 
-def get_synthetic_data():
-    synthetic_path = os.path.join("data",
-                                  "realfromabove")
-    synthetic_path = os.path.join("data",
-                                  "datasetv2",
-                                  "Underwater_Caustics",
-                                  "set2")
+# def get_synthetic_data():
+#     synthetic_path = os.path.join("data",
+#                                   "realfromabove")
+#     synthetic_path = os.path.join("data",
+#                                   "datasetv2",
+#                                   "Underwater_Caustics",
+#                                   "set2")
 
-    real_imgnames = sorted(get_filenames(synthetic_path))
+#     real_img_names = sorted(get_filenames(synthetic_path))
 
-    # Load each pic, resizing, reshaping, etc...
-    real_pics, real_imgshape = load_imgs(real_imgnames,
-                                         synthetic_path,
-                                         real=False)
+#     # Load each img, resizing, reshaping, etc...
+#     real_imgs, real_imgshape = load_imgs(real_img_names,
+#                                          synthetic_path,
+#                                          real=False)
 
-    # Convert the list of images to a numpy array
-    real_pics = np.array(real_pics)
-    real_pics = real_pics*1.0/np.max(real_pics)
-    real_pics = real_pics.astype(np.float32)
+#     # Convert the list of images to a numpy array
+#     real_imgs = np.array(real_imgs)
+#     real_imgs = real_imgs*1.0/np.max(real_imgs)
+#     real_imgs = real_imgs.astype(np.float32)
 
-    test_path = os.path.join("data", "testimgs")
-    testimgnames = sorted(get_filenames(test_path))
-    testimgs, test_imgshape = load_imgs(testimgnames,
-                                        test_path,
-                                        real=True)
-    testimgs = np.array(testimgs)
-    testimgs = testimgs*1.0/np.max(testimgs)
-    testimgs = testimgs.astype(np.float32)
-    return real_pics, real_imgshape, testimgs
+#     test_path = os.path.join("data", "testimgs")
+#     test_img_names = sorted(get_filenames(test_path))
+#     testimgs = load_imgs(test_img_names,
+#                          test_path,
+#                          real=True)
+#     testimgs = np.array(testimgs)
+#     testimgs = testimgs*1.0/np.max(testimgs)
+#     testimgs = testimgs.astype(np.float32)
+#     return real_imgs, real_imgshape, testimgs

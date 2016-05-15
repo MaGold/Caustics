@@ -41,28 +41,33 @@ os.makedirs(VAL_DIR, exist_ok=True)
 
 # Number of pixels in the input and output images
 IMG_SHAPE = (100, 100)
-    
+
 theano.config.floatX = 'float32'
 srng = RandomStreams()
 f = open("costs.txt", 'w')
 f.write("Starting...\n")
 f.close()
 
+print("Loading image data...")
+write("Loading image data...")
+
 channels = 3
 trX, trY, teX, teY, teReal, shp = load_data.get_data(img_shape=IMG_SHAPE)
 img_x = shp[0]
 img_y = img_x
 
-write(str(trX.shape[0]) + " synthetic training images.\n")
-write(str(teX.shape[0]) + " synthetic validation images.\n")
-write(str(teReal.shape[0]) + " real images.\n")
+s1 = str(trX.shape[0]) + " synthetic training images.\n"
+s2 = str(teX.shape[0]) + " synthetic validation images.\n"
+s3 = str(teReal.shape[0]) + " real images.\n"
+print(s1 + s2 + s3)
+write(s1 + s2 + s3)
 
 X = T.ftensor4()
 Y = T.ftensor4()
 
-f1 = (5, channels, 13, 13)
-f2 = (20, f1[0], 3, 3)
-filters = [f1, f2]
+f1 = (5, channels, 3, 3)  # 5 filters of shape 3 x 3
+f2 = (20, f1[0], 3, 3)    # More layers can be added...
+filters = [f1]
 
 filter_params, bias_params = model.get_params(img_x, filters)
 
