@@ -65,15 +65,25 @@ write(s1 + s2 + s3)
 X = T.ftensor4()
 Y = T.ftensor4()
 
+# Network architecture
 f1 = (5, channels, 3, 3)  # 5 filters of shape 3 x 3
-f2 = (20, f1[0], 3, 3)    # More layers can be added...
 filters = [f1]
+
+# More layers can be added.
+# The following would yield a network with 3 convolutional layers,
+# followed by 3 deconvolutional layers
+# f1 = (5, channels, 3, 3)
+# f2 = (20, f1[0], 3, 3)
+# f3 = (10, f2[0], 3, 3)
+# filters = [f1, f2, f3]
 
 filter_params, bias_params = model.get_params(img_x, filters)
 
+# Model with dropout for training
 noise_out = model.model(X, filter_params, bias_params, 0.3, srng)
 noise_out_flat = noise_out.flatten(2)
 
+# Model without dropout for validating
 pred_out = model.model(X, filter_params, bias_params, 0.0, srng)
 pred_out_flat = pred_out.flatten(2)
 
