@@ -16,9 +16,9 @@ is specified in this file. Three directories will created by this script for sto
 ## Processing
 
 Once training is complete and network parameters have been saved in the `params` directory, the script in `process.py` can be used to inspect the trained network. Three directories will created by this script for storing images. By default, these directories are `caustic_frames`, `whitened_images`, and `filters`. The frames of a video specified in `load_data.py` are processed by the network:
-- the output greyscale frames are saved to `caustic_frames`
-- the thresholded rgb frames with white pixels at thresholded locations are saved to `whitened_frames`
-- the first layers filters are saved to `filters`
+- the output greyscale frames are saved to `caustic_frames`;
+- the thresholded rgb frames with white pixels at thresholded locations are saved to `whitened_frames`;
+- the first layers filters are saved to `filters`.
 
 
 
