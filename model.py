@@ -27,8 +27,8 @@ def RMSprop(cost, params, lr=0.001, rho=0.9, epsilon=1e-6):
     for p, g in zip(params, grads):
         acc = theano.shared(p.get_value() * 0.)
         acc_new = rho * acc + (1 - rho) * g ** 2
-        gradient_scaling = T.sqrt(acc_new + epsilon)
-        g = g / gradient_scaling
+        grad_scaling = T.sqrt(acc_new + epsilon)
+        g = g / grad_scaling
         updates.append((acc, acc_new))
         updates.append((p, p - lr * g))
     return updates
@@ -48,7 +48,7 @@ def dropout(X, srng, p=0.):
     return X
 
 
-# Setup the network, given initial parameters
+# Set up the network, given initial parameters
 def model(X, filter_params, bias_params, p_dropout, srng):
     inp = X
     half = int(len(filter_params)/2)
