@@ -73,7 +73,7 @@ for i in range(teReal.shape[0]):
     samples = np.expand_dims(samples, axis=0)
     out = predict(samples)
     out_img = out[0, 0, :, :]
-    plots.plot_img(out_img, (img_x, img_y), i, CAUSTICS_FRAMES_DIR)
+    plots.plot_img(out_img, i, CAUSTICS_FRAMES_DIR)
     # Threshold the output of the network
     out[out > T] = 1.0
     out[out <= T] = 0.0
@@ -88,7 +88,7 @@ for i in range(teReal.shape[0]):
     Gframe[outblock[i, :] == 1.0] = 1
     Bframe[outblock[i, :] == 1.0] = 1
     frame = np.dstack((Rframe, Gframe, Bframe))
-    plots.plot_img(frame, (img_x, img_y), i, WHITENED_FRAMES_DIR)
+    plots.plot_img(frame, i, WHITENED_FRAMES_DIR)
 
 
 # Plot filters
