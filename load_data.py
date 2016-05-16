@@ -3,7 +3,7 @@ import os
 import numpy as np
 
 
-# Walk through path and get filenames as strings
+# Walk through path and get file names as strings
 def get_filenames(path):
     f_names = []
     for (dir_path, dir_names, file_names) in os.walk(path):
@@ -12,7 +12,7 @@ def get_filenames(path):
     return f_names
 
 
-# Extracts submatrices of M having shape `shape`
+# Extract submatrices of M having shape `shape`
 def matrix_splitter(M, shape):
     row = shape[0]
     col = shape[1]
@@ -57,6 +57,13 @@ def load_imgs(fnames, dir_name, img_shape,
     return imgs
 
 
+# Returns data to be used in the training process
+# To be returned:
+#   trX: training set of synthetic images
+#   trY: ground truths for trX
+#   teX: validation set of synthetic images
+#   teY: ground truths for teX
+#   teReal : sample images extracted from a real video
 def get_data(img_shape=(100, 100)):
     rgb_path1 = os.path.join("data",
                              "datasetv2",
