@@ -17,7 +17,7 @@ def init_weights(shape):
 # Biases are initialized to 0
 def init_biases(shape):
     b_values = np.zeros((shape[0],), dtype=theano.config.floatX)
-    return theano.shared(value=b_values, borrow=True, name="Conv_b")
+    return theano.shared(value=b_values, borrow=True)
 
 
 # RMSprop is used for updates
@@ -49,7 +49,7 @@ def dropout(X, srng, p=0.):
 
 
 # Setup the network, given initial parameters
-def model(X, filter_params, bias_params, p_drop_conv, srng):
+def model(X, filter_params, bias_params, p_dropout, srng):
     inp = X
     half = int(len(filter_params)/2)
     conv_params = filter_params[:half]
@@ -59,7 +59,7 @@ def model(X, filter_params, bias_params, p_drop_conv, srng):
     for f, b in zip(conv_params, conv_biases):
         outa = rectify(conv2d(inp, f, border_mode='valid') +
                        b.dimshuffle('x', 0, 'x', 'x'))
-        outb = dropout(outa, srng, p_drop_conv)
+        outb = dropout(outa, srng, p_dropout)
         inp = outb
     c = 0
     for f, b in zip(deconv_params, deconv_biases):
@@ -69,25 +69,25 @@ def model(X, filter_params, bias_params, p_drop_conv, srng):
         else:
             outa = rectify(conv2d(inp, f, border_mode='full') +
                            b.dimshuffle('x', 0, 'x', 'x'))
-        outb = dropout(outa, srng, p_drop_conv)
+        outb = dropout(outa, srng, p_dropout)
         inp = outb
         c += 1
     output = inp
     return output
 
 
-# Setup the parameters for the network
+# Set up the parameters for the network
 def get_params(img_x, filters):
     filter_params = []
     bias_params = []
-    # convolution layers:
+    # Convolution layers:
     for f in filters:
         w = init_weights(f)
         filter_params.append(w)
         b = init_biases(f)
         bias_params.append(b)
     i = 0
-    # deconvolution layers:
+    # Deconvolution layers:
     for f in reversed(filters):
         if i == len(filters)-1:
             w = init_weights((1, f[0], f[2], f[3]))
