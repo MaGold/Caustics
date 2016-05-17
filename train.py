@@ -151,8 +151,7 @@ for i in range(NUM_EPOCHS):
     c = 0
     for start, end in zip(range(0, len(trX), BATCH_SIZE),
                           range(BATCH_SIZE, len(trX), BATCH_SIZE)):
-        cur_er = error(trX[start:end, :], trY[start:end, :])
-        er += cur_er
+        er += error(trX[start:end, :], trY[start:end, :])
         c += 1
     tr_errs.append(er/c)
 
@@ -161,8 +160,7 @@ for i in range(NUM_EPOCHS):
     c = 0
     for start, end in zip(range(0, len(teX), BATCH_SIZE),
                           range(BATCH_SIZE, len(teX), BATCH_SIZE)):
-        cur_er = error(teX[start:end, :], teY[start:end, :])
-        er += cur_er
+        er += error(teX[start:end, :], teY[start:end, :])
         c += 1
     te_errs.append(er/c)
 
