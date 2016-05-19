@@ -4,6 +4,7 @@ Requirements:
 - python 3
 - theano
 - matplotlib
+- ffmpeg
 
 There are two main files to work with directly: `train.py` and `process.py`.
 By default, data will be read from the `data` directory. The specific structure of this directory is specified in `load_data.py`. The general model setup is contained in `model.py`. The file `plots.py` contains simple functions for plotting training curves, image reconstructions, and more.
@@ -17,11 +18,11 @@ is specified in this file. Three directories will created by this script for sto
 
 Once training is complete and network parameters have been saved in the `params` directory, images can be processed by the network in two ways:
 
-### Python script: process.py
+### Python script: `process.py`
 
 The script in `process.py` can be used to inspect the output of the trained network. Run the script with the directory of the images to be processed as an argument, for example, `python3 process.py data/real_frames/GOPR0085`. The output images will be stored in the directory `caustic_frames`. 
 
-### Batch script: create_output_videos.sh
+### Bash script: `create_output_videos.sh`
 
 This script will loop through all the directories in `data/real_frames/`. For each subdirectory, the above python script will be used to
 
