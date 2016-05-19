@@ -1,12 +1,7 @@
 # ------------------------------------------------------------------------
-# This script takes an already trained network and produces 3 things:
-# 1) A sequence of greyscale frames indicating caustic probabilities,
-#    stored in CAUSTICS_FRAMES_DIR
-# 2) A sequence of rgb frames, based on thresholded caustic values,
-#    where pixels strongly hypothesized to be caustics are turned white,
-#    stored in WHITENED_FRAMES_DIR
-# 3) An image showing the filters of the first layer of the network,
-#    stored in FILTERS_DIR
+# This script takes an already trained network and produces a sequence of
+# greyscale frames indicating caustic probabilities, stored in
+# CAUSTICS_FRAMES_DIR.
 #
 # Run the script with the directory of the images to be processed
 # as an argument:
