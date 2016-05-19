@@ -7,6 +7,10 @@
 #    stored in WHITENED_FRAMES_DIR
 # 3) An image showing the filters of the first layer of the network,
 #    stored in FILTERS_DIR
+#
+# Run the script with the directory of the images to be processed
+# as an argument:
+#    python process.py data/real_frames/GOPR0085
 # ------------------------------------------------------------------------
 
 from theano import tensor as T
@@ -34,11 +38,6 @@ TO_PROCESS = sys.argv[1]
 os.makedirs(CAUSTICS_FRAMES_DIR, exist_ok=True)
 os.makedirs(WHITENED_FRAMES_DIR, exist_ok=True)
 os.makedirs(FILTERS_DIR, exist_ok=True)
-
-# # Remove directory contents:
-# fileList = os.listdir(CAUSTICS_FRAMES_DIR)
-# for fileName in fileList:
-#     os.remove(CAUSTICS_FRAMES_DIR + "/" + fileName)
 
 # Number of pixels in the input and output images
 IMG_SHAPE = (400, 400)
