@@ -2,7 +2,9 @@
 # This script is used to train a convolutional neural network.
 # Training can be monitored by looking at:
 #     TRAIN_DIR: sample training data is plotted and saved in this directory
-#     VAL_DIR: sample validation data is plotted and save in this directory
+#     SYNTHETIC_VAL_DIR: sample synthetic data is plotted and
+#                        saved in this directory
+#     REAL_VAL_DIR: sample real images plotted and saved in this directory
 #
 # The parameters of the network are occasionally saved to files in PARAMS_DIR
 # ------------------------------------------------------------------------
@@ -34,13 +36,15 @@ def write(str):
 # Directory where files will be saved
 PARAMS_DIR = "params"
 TRAIN_DIR = "training_images"
-VAL_DIR = "validation_images"
+SYNTHETIC_VAL_DIR = "synthetic_validation_images"
+REAL_VAL_DIR = "real_validation_images"
 os.makedirs(PARAMS_DIR, exist_ok=True)
 os.makedirs(TRAIN_DIR, exist_ok=True)
-os.makedirs(VAL_DIR, exist_ok=True)
+os.makedirs(SYNTHETIC_VAL_DIR, exist_ok=True)
+os.makedirs(REAL_VAL_DIR, exist_ok=True)
 
 # Number of pixels in the input and output images
-IMG_SHAPE = (200, 200)
+IMG_SHAPE = (400, 400)
 
 theano.config.floatX = 'float32'
 srng = RandomStreams()
@@ -124,7 +128,7 @@ error = theano.function(inputs=[X, Y],
 # Training loop begins
 # ------------------------------------------------
 
-NUM_EPOCHS = 2000
+NUM_EPOCHS = 1200
 BATCH_SIZE = 1
 
 # 5 indices for sample predictions
@@ -171,17 +175,19 @@ for i in range(NUM_EPOCHS):
     samples = trX[tr_indx, :]
     out = predict(samples)
     truths = trY[tr_indx, :]
-    plots.plot_train(samples, out, truths, i, [5, 3, img_x, img_y], TRAIN_DIR)
+    plots.plot_train(samples, out, truths, i,
+                     [5, 3, img_x, img_y], TRAIN_DIR, "train")
 
     # Plot some validation predictions for real and synthetic images:
     samples = teX[te_indx, :]
     out = predict(samples)
-    plots.plot_validation(samples, out, i,
-                          [5, 3, img_x, img_y], VAL_DIR, "synthetic")
+    truths = teY[te_indx, :]
+    plots.plot_train(samples, out, truths, i,
+                     [5, 3, img_x, img_y], SYNTHETIC_VAL_DIR, "synthetic")
     samples = teReal[re_indx, :]
     out = predict(samples)
     plots.plot_validation(samples, out, i,
-                          [5, 3, img_x, img_y], VAL_DIR, "real")
+                          [5, 3, img_x, img_y], REAL_VAL_DIR, "real")
 
     # Actual training step:
     rindx = np.arange(trX.shape[0])

@@ -65,7 +65,7 @@ def plot_rgb_filters(x, idx, title=""):
 
 
 # Plot a grid with 5 rows and 3 columns
-def plot_train(samples, predictions, truths, k, imgshape, dir_name):
+def plot_train(samples, predictions, truths, k, imgshape, dir_name, f_name=""):
     batch_size = samples.shape[0]
     predictions = predictions.reshape(batch_size, imgshape[2], imgshape[3])
     fig = plt.figure(figsize=(10, 10))
@@ -95,7 +95,7 @@ def plot_train(samples, predictions, truths, k, imgshape, dir_name):
         elif i == 2:
             ax.set_title("Ground truth")
     gs.update(wspace=0)
-    plt.savefig(os.path.join(dir_name, str(k) + '_train.png'))
+    plt.savefig(os.path.join(dir_name, str(k) + '_' + f_name + '.png'))
     plt.close('all')
 
 

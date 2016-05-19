@@ -39,6 +39,15 @@ def load_imgs(fnames, dir_name, img_shape,
         count += 1
         fullpath = os.path.join(dir_name, img)
         img = scipy.misc.imread(fullpath)
+
+        # contrast
+        # img_name = img
+        # img = Image.open(fullpath)
+        # contraster = ImageEnhance.Contrast(img)
+        # ccc = contraster.enhance(0.15)
+        # ccc.save(dir_name + "/test/contrast_" + img_name)
+        # img = np.array(ccc)
+        
         if grey and len(img.shape) == 2:
             img = img.reshape(img.shape[0], img.shape[1], 1)
         if real:
@@ -54,6 +63,7 @@ def load_imgs(fnames, dir_name, img_shape,
             if img.shape[0] > img_shape[0] and img.shape[1] > img_shape[1]:
                 img = scipy.misc.imresize(img, img_shape)
                 imgs.append(img.reshape(-1))
+                # imgs.append(contrast.reshape(-1))
     return imgs
 
 
@@ -158,8 +168,9 @@ def get_data(img_shape=(100, 100)):
     return trX, trY, teX, teY, teReal
 
 
-def get_real_data(img_shape=(100, 100)):
-    real_path = os.path.join("data", "realfromabove")
+def get_real_data(vid_name, img_shape=(100, 100)):
+    # real_path = os.path.join("data", vid_name)
+    real_path = vid_name
     real_img_names = sorted(get_filenames(real_path))
     print("Loading " + str(len(real_img_names)) + " images...")
     # Load each img, resizing, reshaping, etc...
@@ -173,3 +184,6 @@ def get_real_data(img_shape=(100, 100)):
     real_imgs = real_imgs*1.0/np.max(real_imgs)
     real_imgs = real_imgs.astype(np.float32)
     return real_imgs
+
+
+
