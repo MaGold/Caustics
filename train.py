@@ -84,7 +84,8 @@ filters = [f1]
 filter_params, bias_params = model.get_params(img_x, filters)
 
 # Model with dropout for training
-noise_out = model.model(X, filter_params, bias_params, 0.5, srng)
+# Note: dropout is implemented but not used
+noise_out = model.model(X, filter_params, bias_params, 0.0, srng)
 noise_out_flat = noise_out.flatten(2)
 
 # Model without dropout for validating
@@ -128,8 +129,8 @@ error = theano.function(inputs=[X, Y],
 # Training loop begins
 # ------------------------------------------------
 
-NUM_EPOCHS = 1200
-BATCH_SIZE = 1
+NUM_EPOCHS = 200
+BATCH_SIZE = 32
 
 # 5 indices for sample predictions
 tr_indx = np.random.randint(0, trX.shape[0], size=5)
@@ -190,12 +191,13 @@ for i in range(NUM_EPOCHS):
                           [5, 3, img_x, img_y], REAL_VAL_DIR, "real")
 
     # Actual training step:
-    rindx = np.arange(trX.shape[0])
-    np.random.shuffle(rindx)
+    # rindx = np.arange(trX.shape[0])
+    # np.random.shuffle(rindx)
     for start, end in zip(range(0, len(trX), BATCH_SIZE),
                           range(BATCH_SIZE, len(trX), BATCH_SIZE)):
-        r = rindx[start:end]
-        batch_cost = train(trX[r, :], trY[r, :])
+        # r = rindx[start:end]
+        # batch_cost = train(trX[r, :], trY[r, :])
+        batch_cost = train(trX[start:end, :], trY[start:end, :])
         write("Epoch: " + str(i) +
               ", index: " + str(start) +
               ", cost: " + str(batch_cost) + "\n")

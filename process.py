@@ -54,8 +54,8 @@ X = T.ftensor4()
 Y = T.ftensor4()
 
 # Load the parameters of the previously trained network
-filters_file = os.path.join(PARAMS_DIR, "1_filter_params.p")
-biases_file = os.path.join(PARAMS_DIR, "1_bias_params.p")
+filters_file = os.path.join(PARAMS_DIR, "12_filter_params.p")
+biases_file = os.path.join(PARAMS_DIR, "12_bias_params.p")
 filter_params = pickle.load(open(filters_file, "rb"))
 bias_params = pickle.load(open(biases_file, "rb"))
 print("Network parameters loaded.")
