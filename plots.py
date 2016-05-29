@@ -131,7 +131,7 @@ def plot_validation(samples, predictions, k, imgshape, dir_name, f_name=""):
     plt.close('all')
 
 
-def plot_training_curve(tr, te, ind):
+def plot_training_curve(tr, te, ind, out_dir):
     # sns.axes_style("darkgrid")
     # fig = plt.figure(figsize=(12, 8))
     # ax = fig.add_subplot(111)
@@ -143,15 +143,25 @@ def plot_training_curve(tr, te, ind):
     plt.legend(prop={'size': 15})
     plt.xlabel('Epoch')
     plt.ylabel('Log(error)')
-    plt.savefig('costs.png')
+    d = os.path.join(out_dir, "costs.png")
+    plt.savefig(d)
     plt.close('all')
 
 
 def plot_img(img, indx, dir_name):
-    fig = plt.figure(figsize=(4.8, 4.8))
-    ax = fig.add_subplot(111)
+    ax = plt.axes([0, 0, 1, 1])
     ax.imshow(img, cmap=plt.cm.gist_yarg,
               interpolation='nearest', aspect='equal')
-    plt.savefig(os.path.join(dir_name,
-                             str(indx) + '.png'))
+
+    sizes = np.shape(img)
+    height = float(sizes[0])
+    width = float(sizes[1])
+    fig = plt.figure()
+    fig.set_size_inches(width/height, 1, forward=False)
+    ax = plt.Axes(fig, [0., 0., 1., 1.])
+    ax.set_axis_off()
+    fig.add_axes(ax)
+    ax.imshow(img, cmap=plt.cm.gist_yarg)
+    plt.savefig(os.path.join(dir_name, str(indx) + '.png'),
+                dpi=480)
     plt.close()
