@@ -163,5 +163,5 @@ def plot_img(img, indx, dir_name):
     fig.add_axes(ax)
     ax.imshow(img, cmap=plt.cm.gist_yarg)
     plt.savefig(os.path.join(dir_name, str(indx) + '.png'),
-                dpi=480)
+                dpi=400)
     plt.close()
