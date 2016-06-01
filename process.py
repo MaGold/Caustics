@@ -25,10 +25,11 @@ reload(load_data)
 reload(plots)
 
 # Directories where files are stored or loaded from
-CAUSTICS_FRAMES_DIR = "caustic_frames"
-WHITENED_FRAMES_DIR = "whitened_frames"
-FILTERS_DIR = "filters"
-PARAMS_DIR = "params"
+OUT_DIR = "process_output"
+CAUSTICS_FRAMES_DIR = os.path.join(OUT_DIR, "caustic_frames")
+WHITENED_FRAMES_DIR = os.path.join(OUT_DIR, "whitened_frames")
+FILTERS_DIR = os.path.join(OUT_DIR, "filters")
+PARAMS_DIR = os.path.join("training_output", "params")
 TO_PROCESS = sys.argv[1]
 os.makedirs(CAUSTICS_FRAMES_DIR, exist_ok=True)
 os.makedirs(WHITENED_FRAMES_DIR, exist_ok=True)

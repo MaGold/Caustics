@@ -1,5 +1,6 @@
 # ------------------------------------------------------------------------
 # This script is used to train a convolutional neural network.
+# All output is written to the directory specified in the variable OUT_DIR
 # Training can be monitored by looking at:
 #     TRAIN_DIR: sample training data is plotted and saved in this directory
 #     SYNTHETIC_VAL_DIR: sample synthetic data is plotted and
@@ -26,29 +27,30 @@ reload(model)
 reload(load_data)
 reload(plots)
 
-
-# Helper function for writing output to file
-def write(str):
-    f = open("costs.txt", 'a')
-    f.write(str)
-    f.close()
-
 # Directory where files will be saved
-PARAMS_DIR = "params"
-TRAIN_DIR = "training_images"
-SYNTHETIC_VAL_DIR = "synthetic_validation_images"
-REAL_VAL_DIR = "real_validation_images"
+OUT_DIR = "training_output"
+PARAMS_DIR = os.path.join(OUT_DIR, "params")
+TRAIN_DIR = os.path.join(OUT_DIR, "training_images")
+SYNTHETIC_VAL_DIR = os.path.join(OUT_DIR, "synthetic_validation_images")
+REAL_VAL_DIR = os.path.join(OUT_DIR, "real_validation_images")
 os.makedirs(PARAMS_DIR, exist_ok=True)
 os.makedirs(TRAIN_DIR, exist_ok=True)
 os.makedirs(SYNTHETIC_VAL_DIR, exist_ok=True)
 os.makedirs(REAL_VAL_DIR, exist_ok=True)
+
+
+# Helper function for writing output to file
+def write(str):
+    f = open(os.path.join(OUT_DIR, "costs.txt"), 'a')
+    f.write(str)
+    f.close()
 
 # Number of pixels in the input and output images
 IMG_SHAPE = (400, 400)
 
 theano.config.floatX = 'float32'
 srng = RandomStreams()
-f = open("costs.txt", 'w')
+f = open(os.path.join(OUT_DIR, "costs.txt"), 'w')
 f.write("Starting...\n")
 f.close()
 
@@ -76,10 +78,10 @@ filters = [f1]
 # More layers can be added.
 # The following would yield a network with 3 convolutional layers,
 # followed by 3 deconvolutional layers
-# f1 = (5, channels, 3, 3)
-# f2 = (20, f1[0], 3, 3)
+f1 = (5, channels, 3, 3)
+f2 = (20, f1[0], 3, 3)
 # f3 = (10, f2[0], 3, 3)
-# filters = [f1, f2, f3]
+filters = [f1]
 
 filter_params, bias_params = model.get_params(img_x, filters)
 
@@ -170,7 +172,7 @@ for i in range(NUM_EPOCHS):
     te_errs.append(er/c)
 
     # Update training curve:
-    plots.plot_training_curve(tr_errs, te_errs, i)
+    plots.plot_training_curve(tr_errs, te_errs, i, OUT_DIR)
 
     # Plot some training predictions:
     samples = trX[tr_indx, :]
@@ -191,13 +193,13 @@ for i in range(NUM_EPOCHS):
                           [5, 3, img_x, img_y], REAL_VAL_DIR, "real")
 
     # Actual training step:
-    # rindx = np.arange(trX.shape[0])
-    # np.random.shuffle(rindx)
+    rindx = np.arange(trX.shape[0])
+    np.random.shuffle(rindx)
     for start, end in zip(range(0, len(trX), BATCH_SIZE),
                           range(BATCH_SIZE, len(trX), BATCH_SIZE)):
-        # r = rindx[start:end]
-        # batch_cost = train(trX[r, :], trY[r, :])
-        batch_cost = train(trX[start:end, :], trY[start:end, :])
+        r = rindx[start:end]
+        batch_cost = train(trX[r, :], trY[r, :])
+        # batch_cost = train(trX[start:end, :], trY[start:end, :])
         write("Epoch: " + str(i) +
               ", index: " + str(start) +
               ", cost: " + str(batch_cost) + "\n")

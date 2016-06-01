@@ -132,17 +132,17 @@ def get_data(img_shape=(100, 100)):
     Y = Y.astype(np.float32)
 
     # Shuffle the data and set aside 200 synthetic validation images
-    # a = np.arange(X.shape[0])
-    # np.random.shuffle(a)
-    # indx = a[:200]
-    # teX = X[indx, :]
-    # teY = Y[indx, :]
-    teX = X[:200, :]
-    teY = Y[:200, :]
-    trX = X[200:, :]
-    trY = Y[200:, :]
-    # trX = np.delete(X, indx, 0)
-    # trY = np.delete(Y, indx, 0)
+    a = np.arange(X.shape[0])
+    np.random.shuffle(a)
+    indx = a[:200]
+    teX = X[indx, :]
+    teY = Y[indx, :]
+    # teX = X[:200, :]
+    # teY = Y[:200, :]
+    # trX = X[200:, :]
+    # trY = Y[200:, :]
+    trX = np.delete(X, indx, 0)
+    trY = np.delete(Y, indx, 0)
 
     teReal = real_imgs
     channels = 3

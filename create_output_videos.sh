@@ -16,9 +16,10 @@ for d in data/real_frames/*/ ; do
     # rm caustic_frames/*
     echo "$d"
     rm -f "${d}"/*.mp4
+    rm -f "${d}"/*.MP4
     python3 process.py "$d"
     echo "Done python processing."
-    cd caustic_frames
+    cd process_output/caustic_frames
     echo "Creating caustics video..."
     ffmpeg -framerate 50 -i %d.png -c:v libx264 -r 30 -pix_fmt yuv420p caustics.mp4
     cd "$base"
@@ -30,10 +31,10 @@ for d in data/real_frames/*/ ; do
     echo "Creating cropped version of original video..."
     ffmpeg -i original.mp4 -filter:v "crop=480:480:0:0" cropped.mp4
 
-    mv original.mp4 "$base/caustic_frames/original.mp4"
-    mv cropped.mp4 "$base/caustic_frames/cropped.mp4"
+    mv original.mp4 "$base/process_output/caustic_frames/original.mp4"
+    mv cropped.mp4 "$base/process_output/caustic_frames/cropped.mp4"
 
-    cd "$base/caustic_frames"
+    cd "$base/process_output/caustic_frames"
     tomake=${d#*/*/}
     vid=${tomake::-1} # remove last /
     echo "Creating side-by-side video of cropped video with caustics video..."
@@ -43,5 +44,5 @@ for d in data/real_frames/*/ ; do
     echo "$tomake"
     echo "output_videos/$tomake"
     mkdir -p "output_videos/$tomake"
-    mv caustic_frames/* "output_videos/$tomake"
+    mv process_output/caustic_frames/* "output_videos/$tomake"
 done
