@@ -29,7 +29,7 @@ for d in data/real_frames/*/ ; do
     ffmpeg -framerate 50 -i "%04d.png" -c:v libx264 -r 30 -pix_fmt yuv420p original.mp4
 
     echo "Creating cropped version of original video..."
-    ffmpeg -i original.mp4 -filter:v "crop=480:480:0:0" cropped.mp4
+    ffmpeg -i original.mp4 -filter:v "crop=400:400:0:0" cropped.mp4
 
     mv original.mp4 "$base/process_output/caustic_frames/original.mp4"
     mv cropped.mp4 "$base/process_output/caustic_frames/cropped.mp4"

@@ -51,7 +51,9 @@ def load_imgs(fnames, dir_name, img_shape,
         if grey and len(img.shape) == 2:
             img = img.reshape(img.shape[0], img.shape[1], 1)
         if real:
-            sub_imgs = matrix_splitter(img, shape=(480, 480))
+            sub_imgs = []
+            sub_imgs.append(img[0:img_shape[0], 0:img_shape[1], :])
+            sub_imgs = [img[0:img_shape[0], 0:img_shape[1], :]]
         else:
             sub_imgs = matrix_splitter(img, shape=(img.shape[0],
                                                    img.shape[0]))
@@ -62,8 +64,7 @@ def load_imgs(fnames, dir_name, img_shape,
                 img = img.reshape(img.shape[0], img.shape[1])
             if img.shape[0] > img_shape[0] and img.shape[1] > img_shape[1]:
                 img = scipy.misc.imresize(img, img_shape)
-                imgs.append(img.reshape(-1))
-                # imgs.append(contrast.reshape(-1))
+            imgs.append(img.reshape(-1))
     return imgs
 
 
